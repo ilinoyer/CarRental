@@ -13,7 +13,7 @@
         </property>
         <list name="modelsList" table="MODEL" inverse="true" cascade="save-update">
             <key column="MODEL_ID" />
-            <list-index column="position"/>
+            <list-index column="POSITION"/>
             <one-to-many class="sample.Model"/>
         </list>
     </class>

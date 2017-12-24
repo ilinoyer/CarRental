@@ -41,6 +41,13 @@ public class Main extends Application {
         nissan.addModel(new Model("Primera p12"));
         session.save(nissan);
         session.getTransaction().commit();
+
+        session.beginTransaction();
+        Client client1 = new Client("Adam", "Nowak", 12345, 12345, new Address("KRK", "22-456", "PL", "3A"));
+        Client client2 = new Client("Marian", "Nowak", 12345, 12345, new Address("PZ", "23-567", "PL", "7b"));
+        session.save(client1);
+        session.save(client2);
+        session.getTransaction().commit();
         session.close();
         HibernateUtilities.shutdown();
 

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="sample.Address" table="ADDRESS">
+        <id name="id" type="int">
+            <column name="ADDRES_ID"/>
+            <generator class="native"/>
+        </id>
+        <property name="townName" type="java.lang.String">
+            <column name="TOWN_NAME"/>
+        </property>
+        <property name="postCode" type="java.lang.String">
+            <column name="POST_CODE" />
+        </property>
+        <property name="country" type="java.lang.String">
+            <column name="COUNTRY"/>
+        </property>
+        <property name="flatNumber" type="java.lang.String">
+            <column name="FLAT_NUMBER"/>
+        </property>
+       <!-- <one-to-one name="client" class="sample.Client" property-ref="address"/>
+        -->
+    </class>
+</hibernate-mapping>

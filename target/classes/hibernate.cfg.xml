@@ -18,6 +18,8 @@
         <property name="show_sql">true</property>
         <mapping resource="Brand.hbn.xml"/>
         <mapping resource="Model.hbn.xml"/>
+        <mapping resource="Address.hbn.xml"/>
+        <mapping resource="Client.hbn.xml"/>
 
 
     </session-factory>
