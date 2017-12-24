@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.hibernate.Session;
 
+import java.util.ArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+
 public class Main extends Application {
 
     @Override
@@ -21,12 +24,26 @@ public class Main extends Application {
         primaryStage.show();
 
 
-        Session session = HibernateUtilities.getSessionFactory().openSession();
+
 
     }
 
 
     public static void main(String[] args) {
+
+        Session session = HibernateUtilities.getSessionFactory().openSession();
+
+        session.beginTransaction();
+        Brand nissan = new Brand("Nissan");
+        nissan.addModel(new Model("Micra"));
+        nissan.addModel(new Model("Almera"));
+        nissan.addModel(new Model("Primera p11"));
+        nissan.addModel(new Model("Primera p12"));
+        session.save(nissan);
+        session.getTransaction().commit();
+        session.close();
+        HibernateUtilities.shutdown();
+
         launch(args);
     }
 }
