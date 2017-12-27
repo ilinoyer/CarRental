@@ -46,4 +46,9 @@ public class Brand {
         this.modelsList.add(newModel);
     }
 
+    public Model getModelByIndex(int i)
+    {
+        return this.modelsList.get(i);
+    }
+
 }

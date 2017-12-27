@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="sample.Rental" table="RENTS">
+        <id name="id" type="int">
+            <column name="RENT_ID"/>
+            <generator class="increment"/>
+        </id>
+        <property name="cost" type="double">
+            <column name="COST"/>
+        </property>
+        <property name="dateFrom" type="java.util.Date">
+            <column name="DATE_FROM"/>
+        </property>
+        <property name="dateTo" type="java.util.Date">
+            <column name="DATE_TO"/>
+        </property>
+        <many-to-one name="car" class="sample.Car" column="CAR_ID" cascade="save-update" unique="true" not-null="true"/>
+        <many-to-one name="client" class="sample.Client" column="CLIENT_ID" cascade="save-update" unique="true" not-null="true"/>
+    </class>
+</hibernate-mapping>

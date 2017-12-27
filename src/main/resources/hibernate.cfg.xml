@@ -20,6 +20,8 @@
         <mapping resource="Model.hbn.xml"/>
         <mapping resource="Address.hbn.xml"/>
         <mapping resource="Client.hbn.xml"/>
+        <mapping resource="Car.hbn.xml"/>
+        <mapping resource="Rental.hbn.xml"/>
 
 
     </session-factory>

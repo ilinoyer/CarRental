@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="sample.Car" table="CARS">
+        <id name="id" type="int">
+            <column name="CAR_ID"/>
+            <generator class="increment"/>
+        </id>
+        <property name="registrationNumber" type="java.lang.String">
+            <column name="REG_NUMBER"/>
+        </property>
+        <property name="productionYear" type="int">
+            <column name="PRODUCTION_YEAR"/>
+        </property>
+        <property name="originCountry" type="java.lang.String">
+            <column name="ORIGIN_COUNTRY"/>
+        </property>
+        <property name="advancedInformation" type="java.lang.String">
+            <column name="ADV_INFO"/>
+        </property>
+        <property name="oneDayCost" type="double">
+            <column name="ONE_DAY_COST"/>
+        </property>
+        <property name="availability" type="java.lang.Boolean">
+            <column name="AVAILABILITY"/>
+        </property>
+        <many-to-one name="carModel" class="sample.Model" column="CAR_MODEL" cascade="save-update" unique="true" not-null="true"/>
+    </class>
+</hibernate-mapping>
