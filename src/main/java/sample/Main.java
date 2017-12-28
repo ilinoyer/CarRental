@@ -5,23 +5,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.hibernate.Session;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
+        loader.setController(new MainController());
         Parent root = loader.load();
         primaryStage.setTitle("Car Rental");
-        final MainController maincontroller = loader.getController();
-        primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.setMinHeight(400);
-        primaryStage.setMinWidth(600);
+        Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add("/WindowStyle.css");
+        primaryStage.setScene(scene);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(800);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
 
@@ -31,7 +29,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-
+        /*
         Session session = HibernateUtilities.getSessionFactory().openSession();
 
         session.beginTransaction();
@@ -65,7 +63,7 @@ public class Main extends Application {
         session.getTransaction().commit();
         session.close();
         HibernateUtilities.shutdown();
-
+        */
         launch(args);
     }
 }
