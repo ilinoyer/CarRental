@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 public class AddRentalController implements Initializable {
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
