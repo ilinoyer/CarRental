@@ -4,13 +4,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -24,7 +24,8 @@ public class MainController  implements Initializable{
     @FXML
     private TreeView<String> tree;
 
-
+    @FXML
+    AnchorPane rootPane;
 
 
     private void initTreeView()
@@ -68,27 +69,42 @@ public class MainController  implements Initializable{
                         break;
                     case "Add Rental":
                         isCorrectlyClicked = true;
-                        loader.setLocation(getClass().getResource("/AddRental.fxml"));
+                        loader.setLocation(getClass().getResource("/views/AddRental.fxml"));
                         loader.setController(new AddRentalController());
                         primaryStage.setTitle("Add Rental");
                         break;
                     case "Client":
+                        isCorrectlyClicked = true;
+                        loader.setLocation(getClass().getResource("/views/ClientConfiguration.fxml"));
+                        loader.setController(new ClientConfigurationController());
+                        primaryStage.setTitle("Client Configuration");
                         break;
                     case "Car":
+                        isCorrectlyClicked = true;
+                        loader.setLocation(getClass().getResource("/views/CarConfiguration.fxml"));
+                        loader.setController(new ClientConfigurationController());
+                        primaryStage.setTitle("Car Configuration");
                         break;
                     case "Model":
+                        isCorrectlyClicked = true;
+                        loader.setLocation(getClass().getResource("/views/ModelConfiguration.fxml"));
+                        loader.setController(new ClientConfigurationController());
+                        primaryStage.setTitle("Model Configuration");
                         break;
                     case "Brand":
+                        isCorrectlyClicked = true;
+                        loader.setLocation(getClass().getResource("/views/BrandConfiguration.fxml"));
+                        loader.setController(new ClientConfigurationController());
+                        primaryStage.setTitle("Brand Configuration");
                         break;
                 }
 
                 if(isCorrectlyClicked)
                 {
                     try {
-                        Parent root = loader.load();
-                        Scene scene = new Scene(root, 800, 600);
-                        scene.getStylesheets().add("/WindowStyle.css");
-                        primaryStage.setScene(scene);
+                        rootPane.getChildren().clear();
+                        GridPane newPane = loader.load();
+                        rootPane.getChildren().add(newPane);
                     }catch (Exception e)
                     {
                         e.printStackTrace();
