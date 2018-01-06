@@ -1,13 +1,11 @@
 package sample;
 
-import org.hibernate.mapping.PrimaryKey;
-
 public class Address {
     private int id;
     private String townName;
     private String postCode;
     private String country;
-    private String flatNumber;
+    private String streetAddress;
 
     public Address() {}
 
@@ -15,15 +13,15 @@ public class Address {
         this.townName = townName;
         this.postCode = postCode;
         this.country = country;
-        this.flatNumber = flatNumber;
+        this.streetAddress = flatNumber;
     }
 
-    public String getFlatNumber() {
-        return flatNumber;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setFlatNumber(String flatNumber) {
-        this.flatNumber = flatNumber;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getTownName() {

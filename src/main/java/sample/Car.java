@@ -2,23 +2,36 @@ package sample;
 
 public class Car {
     private int id;
-    private Model carBrand;
+    //required
+    private Model carModel;
     private String registrationNumber;
-    private int productionYear;
-    private String originCountry;
-    private String advancedInformation;
     private double oneDayCost;
     private boolean availability;
+    //optional
+    private String originCountry;
+    private int productionYear;
+    private String advancedInformation;
+
 
     public Car() {}
 
-    public Car(Model carBrand, String registrationNumber, int productionYear, String originCountry, String advancedInformation, double oneDayCost) {
-        this.carBrand = carBrand;
+    public Car(Model carModel, String registrationNumber, int productionYear, String originCountry, String advancedInformation, double oneDayCost) {
+        this.carModel = carModel;
         this.registrationNumber = registrationNumber;
         this.productionYear = productionYear;
         this.originCountry = originCountry;
         this.advancedInformation = advancedInformation;
         this.oneDayCost = oneDayCost;
+        this.availability = true;
+    }
+
+    public Car(CarBuilder carBuilder) {
+        this.carModel = carBuilder.carModel;
+        this.registrationNumber = carBuilder.registrationNumber;
+        this.productionYear = carBuilder.productionYear;
+        this.originCountry = carBuilder.originCountry;
+        this.advancedInformation = carBuilder.advancedInformation;
+        this.oneDayCost = carBuilder.oneDayCost;
         this.availability = true;
     }
 
@@ -31,11 +44,11 @@ public class Car {
     }
 
     public Model getCarModel() {
-        return carBrand;
+        return carModel;
     }
 
-    public void setCarModel(Model carBrand) {
-        this.carBrand = carBrand;
+    public void setCarModel(Model carModel) {
+        this.carModel = carModel;
     }
 
     public String getRegistrationNumber() {
@@ -84,5 +97,46 @@ public class Car {
 
     public void setAvailability(boolean availability) {
         this.availability = availability;
+    }
+
+    public static class CarBuilder{
+
+        private final Model carModel;
+        private final String registrationNumber;
+        private final double oneDayCost;
+        //optional
+        private String originCountry;
+        private int productionYear;
+        private String advancedInformation;
+
+        public CarBuilder(Model carModel, String registrationNumber, double oneDayCost)
+        {
+            this.carModel = carModel;
+            this.registrationNumber = registrationNumber;
+            this.oneDayCost = oneDayCost;
+        }
+
+        public CarBuilder addOriginCountry(String originCountry)
+        {
+            this.originCountry = originCountry;
+            return this;
+        }
+
+        public CarBuilder addProductionYear(int productionYear)
+        {
+            this.productionYear = productionYear;
+            return this;
+        }
+
+        public CarBuilder addAdvancedInformation(String advancedInformation)
+        {
+            this.advancedInformation = advancedInformation;
+            return this;
+        }
+
+        public Car build()
+        {
+            return new Car(this);
+        }
     }
 }

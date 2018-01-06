@@ -12,6 +12,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import sample.HibernateUtilities;
 import sample.controllers.AddRentalController;
 import sample.controllers.ClientConfigurationController;
 
@@ -84,19 +86,19 @@ public class MainController  implements Initializable{
                         case "Car":
                             isCorrectlyClicked = true;
                             loader.setLocation(getClass().getResource("/views/CarConfiguration.fxml"));
-                            loader.setController(new ClientConfigurationController());
+                            loader.setController(new CarConfigurationController());
                             primaryStage.setTitle("Car Configuration");
                             break;
                         case "Model":
                             isCorrectlyClicked = true;
                             loader.setLocation(getClass().getResource("/views/ModelConfiguration.fxml"));
-                            loader.setController(new ClientConfigurationController());
+                            loader.setController(new ModelConfigurationController());
                             primaryStage.setTitle("Model Configuration");
                             break;
                         case "Brand":
                             isCorrectlyClicked = true;
                             loader.setLocation(getClass().getResource("/views/BrandConfiguration.fxml"));
-                            loader.setController(new ClientConfigurationController());
+                            loader.setController(new BrandConfigurationController());
                             primaryStage.setTitle("Brand Configuration");
                             break;
                     }
@@ -113,6 +115,5 @@ public class MainController  implements Initializable{
                 }
             }
         });
-
     }
 }

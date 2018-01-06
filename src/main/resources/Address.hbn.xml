@@ -17,8 +17,8 @@
         <property name="country" type="java.lang.String">
             <column name="COUNTRY"/>
         </property>
-        <property name="flatNumber" type="java.lang.String">
-            <column name="FLAT_NUMBER"/>
+        <property name="streetAddress" type="java.lang.String">
+            <column name="STREET_ADDRESS"/>
         </property>
        <!-- <one-to-one name="client" class="sample.Client" property-ref="address"/>
         -->

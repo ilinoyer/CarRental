@@ -2,9 +2,11 @@ package sample;
 
 public class Client {
     private int id;
+    //required
     private String firstName;
     private String lastName;
     private int identityCardNumber;
+    //optional
     private int drivingLicenseNumber;
     private Address address;
 
@@ -17,6 +19,15 @@ public class Client {
         this.identityCardNumber = identityCardNumber;
         this.drivingLicenseNumber = drivingLicenseNumber;
         this.address = address;
+    }
+
+    public Client(ClientBuilder clientBuilder)
+    {
+        this.firstName = clientBuilder.firstName;
+        this.lastName = clientBuilder.lastName;
+        this.identityCardNumber = clientBuilder.identityCardNumber;
+        this.drivingLicenseNumber = clientBuilder.drivingLicenseNumber;
+        this.address = clientBuilder.address;
     }
 
     public int getId() {
@@ -66,5 +77,39 @@ public class Client {
     public void setAddress(Address address) {
         //address.setClient(this);
         this.address = address;
+    }
+
+    public static class ClientBuilder{
+        //required
+        private final String firstName;
+        private final String lastName;
+        private final int identityCardNumber;
+        //optional
+        private int drivingLicenseNumber;
+        private Address address;
+
+        public ClientBuilder(String firstName, String lastName, int identityCardNumber)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.identityCardNumber = identityCardNumber;
+        }
+
+        public ClientBuilder addDrivingLicenseNumber(int drivingLicenseNumber)
+        {
+            this.drivingLicenseNumber = drivingLicenseNumber;
+            return this;
+        }
+
+        public ClientBuilder addAddress(Address address)
+        {
+            this.address = address;
+            return this;
+        }
+
+        public Client build()
+        {
+            return new Client(this);
+        }
     }
 }

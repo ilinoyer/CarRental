@@ -55,10 +55,16 @@ public class AddClientController implements Initializable {
             public void handle(ActionEvent event) {
                 Session session = HibernateUtilities.getSessionFactory().openSession();
                 session.beginTransaction();
-                Client newClient = new Client(firstNameField.getText(),lastNameField.getText(), Integer.parseInt(drivingLicenseField.getText()),Integer.parseInt(IDNumberField.getText()), new Address(townField.getText(), postCodeField.getText(), countryField.getText(), addressField.getText()));
+               //Client newClient = new Client(firstNameField.getText(),lastNameField.getText(), Integer.parseInt(drivingLicenseField.getText()),Integer.parseInt(IDNumberField.getText()), new Address(townField.getText(), postCodeField.getText(), countryField.getText(), addressField.getText()));
+                Client newClient = new Client.ClientBuilder(firstNameField.getText(),lastNameField.getText(),Integer.parseInt(IDNumberField.getText()))
+                        .addDrivingLicenseNumber(Integer.parseInt(drivingLicenseField.getText()))
+                        .addAddress(new Address(townField.getText(), postCodeField.getText(), countryField.getText(), addressField.getText()))
+                        .build();
                 session.save(newClient);
                 session.getTransaction().commit();
                 session.close();
+                //Stage stage = (Stage)addButton.getScene().getWindow();
+                //stage.close();
             }
         });
 

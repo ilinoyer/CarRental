@@ -8,7 +8,7 @@
             <column name="CLIENT_ID"/>
             <generator class="increment"/>
         </id>
-        <property name="drivingLicenseNumber" type="int">
+        <property name="drivingLicenseNumber" type="int" unique="true">
             <column name="DRIVING_LICENSE_NUM"/>
         </property>
         <property name="firstName" type="java.lang.String">
@@ -17,10 +17,9 @@
         <property name="lastName" type="java.lang.String">
             <column name="LAST_NAME"/>
         </property>
-        <property name="identityCardNumber" type="int">
+        <property name="identityCardNumber" type="int" unique="true">
             <column name="ID_CARD_NUM"/>
         </property>
         <many-to-one name="address" class="sample.Address" column="ADDRESS_ID" cascade="save-update" unique="true" not-null="true"/>
     </class>
-
 </hibernate-mapping>

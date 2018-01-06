@@ -1,10 +1,12 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import sample.controllers.MainController;
 
 public class Main extends Application {
@@ -22,6 +24,13 @@ public class Main extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setResizable(false);
         primaryStage.show();
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                HibernateUtilities.shutdown();
+            }
+        });
 
 
     }
