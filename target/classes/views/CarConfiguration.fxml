@@ -34,6 +34,6 @@
             </GridPane.margin></Label>
         <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="3" />
         <Button minHeight="28.0" minWidth="100.0" mnemonicParsing="false" text="Delete" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-        <Button minHeight="28.0" minWidth="100.0" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+        <Button fx:id="addCarButton" minHeight="28.0" minWidth="100.0" mnemonicParsing="false" text="Add" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
     </children>
 </GridPane>
