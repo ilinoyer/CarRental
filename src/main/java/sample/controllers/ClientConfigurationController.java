@@ -59,18 +59,31 @@ public class ClientConfigurationController implements Initializable{
     private TableColumn addressCol =
             new TableColumn<>("Address");
 
-    private void openAddWindow()
+    SimpleBooleanProperty isNewClientAdded = new SimpleBooleanProperty(false);
+    private AddClientController addClientController = null;
+
+
+    private void openAddWindow(Client newClient)
     {
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/views/AddClient.fxml"));
-            fxmlLoader.setController(new AddClientController());
+            fxmlLoader.setController(new AddClientController(isNewClientAdded));
             Scene scene = new Scene((Parent) fxmlLoader.load(), 400, 400);
             Stage stage = new Stage();
+            addClientController = fxmlLoader.getController();
             stage.setResizable(false);
             stage.setTitle("Add Client");
             stage.setScene(scene);
-            stage.show();
+            stage.showAndWait();
+
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    System.out.println("asadasdadasd");
+                }
+            });
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -96,12 +109,6 @@ public class ClientConfigurationController implements Initializable{
 
         clientsView.getItems().addAll(tableData);
     }
-
-    private String modifyAddress()
-    {
-        return "More";
-    }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -245,7 +252,29 @@ public class ClientConfigurationController implements Initializable{
         addClientButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                openAddWindow();
+                Client newClient = new Client();
+                openAddWindow(newClient);
+
+            }
+        });
+
+        isNewClientAdded.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+                if(newValue && addClientController != null)
+                {
+                    Client newClient = addClientController.getNewClient();
+                    Session session = HibernateUtilities.getSessionFactory().openSession();
+                    session.beginTransaction();
+                    session.save(newClient);
+                    session.getTransaction().commit();
+                    session.close();
+                    tableData.add(newClient);
+                    clientsView.getItems().add(newClient);
+                    clientsView.refresh();
+                    isNewClientAdded.setValue(false);
+                }
             }
         });
     }
@@ -272,8 +301,6 @@ public class ClientConfigurationController implements Initializable{
 
                     session.getTransaction().commit();
                     session.close();
-
-
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(getClass().getResource("/views/ModifyAddress.fxml"));
@@ -294,7 +321,6 @@ public class ClientConfigurationController implements Initializable{
                         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                             if(isChanged.getValue())
                             {
-                                System.out.println("jestem2");
                                 Session session = HibernateUtilities.getSessionFactory().openSession();
                                 session.beginTransaction();
 

@@ -23,6 +23,11 @@ public class Client {
 
     public Client(ClientBuilder clientBuilder)
     {
+        this.constructClient(clientBuilder);
+    }
+
+    public void constructClient(ClientBuilder clientBuilder)
+    {
         this.firstName = clientBuilder.firstName;
         this.lastName = clientBuilder.lastName;
         this.identityCardNumber = clientBuilder.identityCardNumber;
@@ -77,6 +82,18 @@ public class Client {
     public void setAddress(Address address) {
         //address.setClient(this);
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", identityCardNumber=" + identityCardNumber +
+                ", drivingLicenseNumber=" + drivingLicenseNumber +
+                ", address=" + address +
+                '}';
     }
 
     public static class ClientBuilder{

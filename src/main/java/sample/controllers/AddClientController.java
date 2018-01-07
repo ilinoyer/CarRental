@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -7,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.hibernate.Session;
 import sample.Address;
 import sample.Client;
@@ -47,24 +49,26 @@ public class AddClientController implements Initializable {
     @FXML
     private Button addButton;
 
+    private Client newClient;
+    private SimpleBooleanProperty isNewClientAdded;
+
+    public AddClientController( SimpleBooleanProperty isNewClientAdded) {
+        this.isNewClientAdded = isNewClientAdded;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Session session = HibernateUtilities.getSessionFactory().openSession();
-                session.beginTransaction();
-               //Client newClient = new Client(firstNameField.getText(),lastNameField.getText(), Integer.parseInt(drivingLicenseField.getText()),Integer.parseInt(IDNumberField.getText()), new Address(townField.getText(), postCodeField.getText(), countryField.getText(), addressField.getText()));
-                Client newClient = new Client.ClientBuilder(firstNameField.getText(),lastNameField.getText(),Integer.parseInt(IDNumberField.getText()))
+                newClient = new Client.ClientBuilder(firstNameField.getText(),lastNameField.getText(),Integer.parseInt(IDNumberField.getText()))
                         .addDrivingLicenseNumber(Integer.parseInt(drivingLicenseField.getText()))
-                        .addAddress(new Address(townField.getText(), postCodeField.getText(), countryField.getText(), addressField.getText()))
-                        .build();
-                session.save(newClient);
-                session.getTransaction().commit();
-                session.close();
-                //Stage stage = (Stage)addButton.getScene().getWindow();
-                //stage.close();
+                        .addAddress(new Address(townField.getText(), postCodeField.getText(), countryField.getText(), addressField.getText())).build();
+
+                isNewClientAdded.setValue(true);
+                Stage stage = (Stage)addButton.getScene().getWindow();
+                stage.close();
             }
         });
 
@@ -77,4 +81,10 @@ public class AddClientController implements Initializable {
         });
 
     }
+
+    public Client getNewClient()
+    {
+        return newClient;
+    }
+
 }
