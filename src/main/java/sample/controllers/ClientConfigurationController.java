@@ -1,8 +1,8 @@
 package sample.controllers;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,15 +10,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.AccessibleAttribute;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.converter.NumberStringConverter;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
@@ -253,6 +252,8 @@ public class ClientConfigurationController implements Initializable{
 
     private class CellButton extends TableCell<Client, Boolean>{
         private final Button moreButton = new Button("More");
+        private SimpleBooleanProperty isChanged = new SimpleBooleanProperty(false);
+
 
         public CellButton()
         {
@@ -260,17 +261,23 @@ public class ClientConfigurationController implements Initializable{
                 @Override
                 public void handle(ActionEvent event) {
 
+                    Session session = HibernateUtilities.getSessionFactory().openSession();
+                    session.beginTransaction();
 
-                   int clientId = CellButton.super.getIndex() + 1;
+                    int clientId = CellButton.super.getIndex() + 1;
+                    String hql = "select c.address from Client c where c.id = :clientId";
+                    Query query = session.createQuery(hql);
+                    query.setParameter("clientId",clientId );
+                    Address addressToModify = (Address)query.getSingleResult();
 
-                   //TODO
-                    //download address object from DB, send it to Modify window controller
-                    //update object in DB after closing a window
+                    session.getTransaction().commit();
+                    session.close();
+
 
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         fxmlLoader.setLocation(getClass().getResource("/views/ModifyAddress.fxml"));
-                        fxmlLoader.setController(new ModifyAddressController());
+                        fxmlLoader.setController(new ModifyAddressController(addressToModify, isChanged));
                         Scene scene = new Scene((Parent) fxmlLoader.load(), 400, 400);
                         Stage stage = new Stage();
                         stage.setResizable(false);
@@ -281,6 +288,35 @@ public class ClientConfigurationController implements Initializable{
                     {
                         e.printStackTrace();
                     }
+
+                    isChanged.addListener(new ChangeListener<Boolean>() {
+                        @Override
+                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                            if(isChanged.getValue())
+                            {
+                                System.out.println("jestem2");
+                                Session session = HibernateUtilities.getSessionFactory().openSession();
+                                session.beginTransaction();
+
+                                String hql = "update Address set townName =:townName," +
+                                        "postCode =:postCode," +
+                                        "country =:country," +
+                                        "streetAddress =:streetAddress " +
+                                        "WHERE id =:id";
+                                Query query = session.createQuery(hql);
+                                query.setParameter("townName", addressToModify.getTownName());
+                                query.setParameter("postCode", addressToModify.getPostCode());
+                                query.setParameter("country", addressToModify.getCountry());
+                                query.setParameter("streetAddress", addressToModify.getStreetAddress());
+                                query.setParameter("id", addressToModify.getId());
+                                query.executeUpdate();
+
+                                session.getTransaction().commit();
+                                session.close();
+                                isChanged.setValue(false);
+                            }
+                        }
+                    });
                 }
             });
 
