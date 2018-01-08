@@ -39,6 +39,9 @@ public class ClientConfigurationController implements Initializable{
     Button addClientButton;
 
     @FXML
+    Button deleteButton;
+
+    @FXML
     private TableView<Client> clientsView;
 
     private TableColumn<Client, Integer> idCol =
@@ -277,12 +280,35 @@ public class ClientConfigurationController implements Initializable{
                 }
             }
         });
+
+        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int id = clientsView.getSelectionModel().getFocusedIndex();
+                clientsView.getItems().remove(id);
+                tableData.remove(id);
+                clientsView.refresh();
+
+                Session session = HibernateUtilities.getSessionFactory().openSession();
+                session.beginTransaction();
+
+                String hql = "delete from Client where id =:clientId";
+                Query query = session.createQuery(hql);
+                query.setParameter("clientId", id+1);
+                query.executeUpdate();
+
+                session.getTransaction().commit();
+                session.close();
+
+            }
+        });
+
     }
 
     private class CellButton extends TableCell<Client, Boolean>{
+
         private final Button moreButton = new Button("More");
         private SimpleBooleanProperty isChanged = new SimpleBooleanProperty(false);
-
 
         public CellButton()
         {

@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -16,6 +17,9 @@ import java.util.ResourceBundle;
 
 public class AddBrandController implements Initializable{
 
+    private SimpleBooleanProperty isNewBrandAdded;
+    private Brand newBrand;
+
     @FXML
     Button cancelButton;
 
@@ -25,18 +29,21 @@ public class AddBrandController implements Initializable{
     @FXML
     TextField brandNameField;
 
+    public AddBrandController(SimpleBooleanProperty isNewBrandAdded)
+    {
+        this.isNewBrandAdded = isNewBrandAdded;
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
 
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Session session = HibernateUtilities.getSessionFactory().openSession();
-                session.beginTransaction();
-                Brand newBrand = new Brand(brandNameField.getText());
-                session.save(newBrand);
-                session.getTransaction().commit();
-                session.close();
+                newBrand = new Brand(brandNameField.getText());
+                isNewBrandAdded.setValue(true);
                 //Stage stage = (Stage)addButton.getScene().getWindow();
                 //stage.close();
             }
@@ -49,5 +56,9 @@ public class AddBrandController implements Initializable{
                 stage.close();
             }
         });
+    }
+
+    public Brand getNewBrand() {
+        return newBrand;
     }
 }
