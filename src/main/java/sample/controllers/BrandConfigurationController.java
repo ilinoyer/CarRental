@@ -22,7 +22,6 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import sample.Brand;
-import sample.Client;
 import sample.HibernateUtilities;
 
 
@@ -95,16 +94,16 @@ public class BrandConfigurationController implements Initializable{
 
         brandsView.setEditable(true);
 
-        GridPane stage = (GridPane)brandsView.getParent();
+        GridPane gridPane = (GridPane)brandsView.getParent();
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        idCol.setMinWidth(stage.getMinWidth()/2 - 5);
+        idCol.setMinWidth(gridPane.getMinWidth()/2 - 5);
         idCol.setResizable(false);
 
         brandCol.setCellValueFactory(new PropertyValueFactory<>("brandName"));
         brandCol.setCellFactory(TextFieldTableCell.<Brand> forTableColumn());
         brandCol.setResizable(false);
-        brandCol.setMinWidth(stage.getMinWidth()/2);
+        brandCol.setMinWidth(gridPane.getMinWidth()/2);
 
         brandCol.setOnEditCommit((TableColumn.CellEditEvent<Brand,String> event) ->{
             TablePosition<Brand, String> pos = event.getTablePosition();
@@ -146,14 +145,14 @@ public class BrandConfigurationController implements Initializable{
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if(newValue && addBrandController.getNewBrand() != null)
                 {
-                    Brand newBramd = addBrandController.getNewBrand();
+                    Brand newBrand = addBrandController.getNewBrand();
                     Session session = HibernateUtilities.getSessionFactory().openSession();
                     session.beginTransaction();
-                    session.save(newBramd);
+                    session.save(newBrand);
                     session.getTransaction().commit();
                     session.close();
-                    tableData.add(newBramd);
-                    brandsView.getItems().add(newBramd);
+                    tableData.add(newBrand);
+                    brandsView.getItems().add(newBrand);
                     brandsView.refresh();
                     isNewBrandAdded.setValue(false);
                 }

@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -16,6 +17,9 @@ import java.util.ResourceBundle;
 
 public class AddModelController implements Initializable{
 
+    private Model model;
+    private SimpleBooleanProperty isNewModelAdded;
+
     @FXML
     private Button cancelButton;
 
@@ -27,6 +31,10 @@ public class AddModelController implements Initializable{
 
     @FXML
     private ComboBox<String> brandComboBox;
+
+    public AddModelController(SimpleBooleanProperty isNewModelAdded) {
+        this.isNewModelAdded = isNewModelAdded;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

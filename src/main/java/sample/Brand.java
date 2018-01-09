@@ -51,4 +51,8 @@ public class Brand {
         return this.modelsList.get(i);
     }
 
+    @Override
+    public String toString() {
+        return brandName;
+    }
 }
