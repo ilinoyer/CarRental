@@ -1,17 +1,18 @@
 package sample;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Brand {
     private int id;
     private String brandName;
-    private List<Model> modelsList;
+    private Set<Model> modelsList = new HashSet<Model>();
 
     public Brand(String brandName)
     {
         this.brandName = brandName;
-        this.modelsList = new ArrayList<>();
     }
 
     public Brand(){}
@@ -32,11 +33,11 @@ public class Brand {
         this.brandName = brandName;
     }
 
-    public List<Model> getModelsList() {
+    public Set<Model> getModelsList() {
         return modelsList;
     }
 
-    public void setModelsList(List<Model> modelsList) {
+    public void setModelsList(Set<Model> modelsList) {
         this.modelsList = modelsList;
     }
 
@@ -46,9 +47,9 @@ public class Brand {
         this.modelsList.add(newModel);
     }
 
-    public Model getModelByIndex(int i)
+    public int getModelsNumber()
     {
-        return this.modelsList.get(i);
+        return modelsList.size() +1;
     }
 
     @Override

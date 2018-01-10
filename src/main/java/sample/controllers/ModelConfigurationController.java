@@ -2,6 +2,7 @@ package sample.controllers;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +39,7 @@ public class ModelConfigurationController implements Initializable{
     private ObservableList<Model> tableData = FXCollections.observableArrayList();
     private ObservableList<String> brandsList = FXCollections.observableArrayList();
     private SimpleBooleanProperty isNewModelAdded = new SimpleBooleanProperty(false);
-    private AddBrandController addModelController = null;
+    private AddModelController addModelController = null;
 
 
     @FXML
@@ -200,13 +201,14 @@ public class ModelConfigurationController implements Initializable{
 
             Brand newBrand = (Brand) query.getSingleResult();
             newBrand.addModel(modelToUpdate);
-
-            hql = "update Brand set modelsList =:modelList " +
+            //session.update(newBrand);
+            /*hql = "update Brand set modelsList =:modelList " +
                     "where id =:brandId";
 
             query = session.createQuery(hql);
             query.setParameter("modelList", newBrand.getModelsList());
             query.setParameter("brandId", newBrand.getId());
+           // query.executeUpdate();*/
 
             session.getTransaction().commit();
             session.close();
@@ -244,6 +246,20 @@ public class ModelConfigurationController implements Initializable{
 
                 session.getTransaction().commit();
                 session.close();
+            }
+        });
+
+        isNewModelAdded.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue && addModelController.getNewModel() != null)
+                {
+                    Model newModel = addModelController.getNewModel();
+                    tableData.add(newModel);
+                    modelsView.getItems().add(newModel);
+                    modelsView.refresh();
+                    isNewModelAdded.setValue(false);
+                }
             }
         });
     }

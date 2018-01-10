@@ -24,6 +24,7 @@ public class Main extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setResizable(false);
         primaryStage.show();
+        HibernateUtilities.getSessionFactory();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

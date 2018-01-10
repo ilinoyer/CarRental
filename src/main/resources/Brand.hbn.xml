@@ -11,10 +11,9 @@
         <property name="brandName" type="java.lang.String">
             <column name="BRAND_NAME"/>
         </property>
-        <list name="modelsList" table="MODEL" inverse="true" cascade="save-update">
-            <key column="MODEL_ID" />
-            <list-index column="POSITION"/>
+        <set name="modelsList" table="MODEL" inverse="true" cascade="all">
+            <key column="MODEL_ID" not-null="true"/>
             <one-to-many class="sample.Model"/>
-        </list>
+        </set>
     </class>
 </hibernate-mapping>

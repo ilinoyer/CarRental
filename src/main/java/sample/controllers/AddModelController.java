@@ -9,7 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import sample.*;
 
 import java.net.URL;
@@ -17,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class AddModelController implements Initializable{
 
-    private Model model;
+    private Model newModel = null;
     private SimpleBooleanProperty isNewModelAdded;
 
     @FXML
@@ -36,21 +39,60 @@ public class AddModelController implements Initializable{
         this.isNewModelAdded = isNewModelAdded;
     }
 
+    private void initComboBox()
+    {
+        Session session = HibernateUtilities.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        ScrollableResults scrollableResults = session.createQuery("from Brand ").scroll(ScrollMode.FORWARD_ONLY);
+
+        Brand addBrand;
+        while(scrollableResults.next())
+        {
+            addBrand = (Brand) scrollableResults.get(0);
+            brandComboBox.getItems().add(addBrand.getBrandName());
+        }
+
+        session.getTransaction().commit();
+        session.close();
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        initComboBox();
 
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Model newModel = new Model(modelNameField.getText());
+
                 Session session = HibernateUtilities.getSessionFactory().openSession();
                 session.beginTransaction();
-                Model newModel = new Model(modelNameField.getText());
-                session.save(newModel);
+
+                String hql = "from Brand where brandName=:brandName";
+                Query query = session.createQuery(hql);
+                query.setParameter("brandName", brandComboBox.getSelectionModel().getSelectedItem());
+                Brand brandToUpdate = (Brand) query.getSingleResult();
+                System.out.println(brandToUpdate.getModelsNumber());
+                brandToUpdate.addModel(newModel);
+                session.update(brandToUpdate);
+
+                /*hql = "update Brand set modelsList =:modelList where id =:brandId";
+                query = session.createQuery(hql);
+                query.setParameter("modelList", brandToUpdate.getModelsList());
+                query.setParameter("brandId", brandToUpdate.getId());
+                query.executeUpdate(); */
+
                 session.getTransaction().commit();
                 session.close();
+
+                isNewModelAdded.setValue(true);
+
                 //Stage stage = (Stage)addButton.getScene().getWindow();
                 //stage.close();
-                // loading brands from database needed
+
             }
         });
 
@@ -62,5 +104,10 @@ public class AddModelController implements Initializable{
             }
         });
 
+    }
+
+    public Model getNewModel()
+    {
+        return newModel;
     }
 }

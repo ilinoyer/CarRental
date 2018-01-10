@@ -6,6 +6,7 @@ public class Model {
     private Brand brand;
 
     public Model(String modelName) {
+        super();
         this.modelName = modelName;
     }
 
