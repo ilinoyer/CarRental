@@ -33,7 +33,7 @@ public class AddModelController implements Initializable{
     private TextField modelNameField;
 
     @FXML
-    private ComboBox<String> brandComboBox;
+    private ComboBox<Brand> brandComboBox;
 
     public AddModelController(SimpleBooleanProperty isNewModelAdded) {
         this.isNewModelAdded = isNewModelAdded;
@@ -50,7 +50,7 @@ public class AddModelController implements Initializable{
         while(scrollableResults.next())
         {
             addBrand = (Brand) scrollableResults.get(0);
-            brandComboBox.getItems().add(addBrand.getBrandName());
+            brandComboBox.getItems().add(addBrand);
         }
 
         session.getTransaction().commit();
@@ -66,24 +66,15 @@ public class AddModelController implements Initializable{
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Model newModel = new Model(modelNameField.getText());
+                newModel = new Model(modelNameField.getText());
+                Brand brand = brandComboBox.getSelectionModel().getSelectedItem();
+                brand.addModel(newModel);
 
                 Session session = HibernateUtilities.getSessionFactory().openSession();
                 session.beginTransaction();
 
-                String hql = "from Brand where brandName=:brandName";
-                Query query = session.createQuery(hql);
-                query.setParameter("brandName", brandComboBox.getSelectionModel().getSelectedItem());
-                Brand brandToUpdate = (Brand) query.getSingleResult();
-                System.out.println(brandToUpdate.getModelsNumber());
-                brandToUpdate.addModel(newModel);
-                session.update(brandToUpdate);
 
-                /*hql = "update Brand set modelsList =:modelList where id =:brandId";
-                query = session.createQuery(hql);
-                query.setParameter("modelList", brandToUpdate.getModelsList());
-                query.setParameter("brandId", brandToUpdate.getId());
-                query.executeUpdate(); */
+                session.update(brand);
 
                 session.getTransaction().commit();
                 session.close();

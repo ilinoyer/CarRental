@@ -1,6 +1,7 @@
 package sample.controllers;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,7 +38,6 @@ import java.util.ResourceBundle;
 public class ModelConfigurationController implements Initializable{
 
     private ObservableList<Model> tableData = FXCollections.observableArrayList();
-    private ObservableList<String> brandsList = FXCollections.observableArrayList();
     private SimpleBooleanProperty isNewModelAdded = new SimpleBooleanProperty(false);
     private AddModelController addModelController = null;
 
@@ -57,7 +57,7 @@ public class ModelConfigurationController implements Initializable{
     private TableColumn<Model, String> modelCol =
             new TableColumn<>("Model");
 
-    private TableColumn<Model, String> brandCol =
+    private TableColumn<Model, Brand> brandCol =
             new TableColumn<>("Brand");
 
     private void initTable()
@@ -79,25 +79,6 @@ public class ModelConfigurationController implements Initializable{
 
         modelsView.getItems().addAll(tableData);
     }
-
-    private void initBrandsList()
-    {
-        Session session = HibernateUtilities.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        ScrollableResults scrollableResults = session.createQuery("from Brand ").scroll(ScrollMode.FORWARD_ONLY);
-
-        Brand addBrand;
-        while(scrollableResults.next())
-        {
-            addBrand = (Brand) scrollableResults.get(0);
-            brandsList.add(addBrand.getBrandName());
-        }
-
-        session.getTransaction().commit();
-        session.close();
-    }
-
 
     private void openAddWindow()
     {
@@ -126,6 +107,7 @@ public class ModelConfigurationController implements Initializable{
         GridPane gridPane = (GridPane) modelsView.getParent();
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idCol.setEditable(false);
         idCol.setMinWidth(gridPane.getMinWidth()/3 - 5);
         idCol.setResizable(false);
 
@@ -158,63 +140,31 @@ public class ModelConfigurationController implements Initializable{
             session.close();
         });
 
-        initBrandsList();
+       brandCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Model, Brand>, ObservableValue<Brand>>() {
+           @Override
+           public ObservableValue<Brand> call(TableColumn.CellDataFeatures<Model, Brand> param) {
+               Model model = param.getValue();
 
-        brandCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Model, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Model, String> param) {
-                Model model = param.getValue();
+               Session session = HibernateUtilities.getSessionFactory().openSession();
+               session.beginTransaction();
 
-                Session session = HibernateUtilities.getSessionFactory().openSession();
-                session.beginTransaction();
+               String hql ="from Brand where id=:brandId";
+               Query query = session.createQuery(hql);
+               query.setParameter("brandId", model.getBrand().getId());
+               Brand brand = (Brand)query.getSingleResult();
 
-                String hql ="from Brand where id=:brandId";
-                Query query = session.createQuery(hql);
-                query.setParameter("brandId", model.getBrand().getId());
-                Brand brand = (Brand)query.getSingleResult();
+               session.getTransaction().commit();
+               session.close();
 
-                session.getTransaction().commit();
-                session.close();
+               return new SimpleObjectProperty<>(brand);
+           }
+       });
 
-                return new SimpleStringProperty(brand.getBrandName());
-            }
-        });
 
-        brandCol.setCellFactory(ComboBoxTableCell.forTableColumn(brandsList));
         brandCol.setResizable(false);
+        brandCol.setEditable(false);
         brandCol.setMinWidth(gridPane.getMinWidth()/3);
 
-        brandCol.setOnEditCommit((TableColumn.CellEditEvent<Model, String> event) -> {
-            TablePosition<Model, String> pos = event.getTablePosition();
-
-            String brandName = event.getNewValue();
-            int row = pos.getRow();
-
-            Model modelToUpdate = tableData.get(row);
-
-            Session session = HibernateUtilities.getSessionFactory().openSession();
-            session.beginTransaction();
-
-            String hql = "from Brand where brandName=:brandName";
-            Query query = session.createQuery(hql);
-            query.setParameter("brandName", brandName);
-
-            Brand newBrand = (Brand) query.getSingleResult();
-            newBrand.addModel(modelToUpdate);
-            //session.update(newBrand);
-            /*hql = "update Brand set modelsList =:modelList " +
-                    "where id =:brandId";
-
-            query = session.createQuery(hql);
-            query.setParameter("modelList", newBrand.getModelsList());
-            query.setParameter("brandId", newBrand.getId());
-           // query.executeUpdate();*/
-
-            session.getTransaction().commit();
-            session.close();
-
-            modelsView.refresh();
-        });
 
         modelsView.getColumns().addAll(idCol,modelCol,brandCol);
 
@@ -254,6 +204,7 @@ public class ModelConfigurationController implements Initializable{
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if(newValue && addModelController.getNewModel() != null)
                 {
+                    System.out.println("updating view");
                     Model newModel = addModelController.getNewModel();
                     tableData.add(newModel);
                     modelsView.getItems().add(newModel);

@@ -11,7 +11,7 @@
         <property name="brandName" type="java.lang.String">
             <column name="BRAND_NAME"/>
         </property>
-        <set name="modelsList" table="MODEL" inverse="true" cascade="all">
+        <set name="modelsList" table="MODEL" inverse="true" cascade="save-update" lazy="false">
             <key column="MODEL_ID" not-null="true"/>
             <one-to-many class="sample.Model"/>
         </set>
